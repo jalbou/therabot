@@ -3,14 +3,14 @@ clear
 $wh="https://www.eve-scout.com/api/wormholes"
 $req1 = Invoke-Webrequest -URI $wh -UseBasicParsing
 $WHJSON= $req1 | ConvertFrom-Json
-#Fetch Thera destinations
-$destinations=(($WHJSON).destinationSolarSystem | Where-Object {$_.name -notmatch "Thera" } | Where-Object {$_.name -notmatch "J"}).name
-$routeFromHome=@()
+$homesys="I-NGI8"
 $hookUrlDiscord = "https://discord.com/api/webhooks/823696475321925673/c_CA7w6C5ghfqyj2MbqnRKZ2SoAWS6tPFN9khoN2MapS-PHPVjKVcFkgax_qNMzecLDM"
-#$hookUrlGuilded = "https://media.guilded.gg/webhooks/cded68c3-6cf5-4463-8435-e718c4a2eac1/s1GZ1qImCkKcCosSwOMSe0cICeCwI2W0c82AAygsOCWIMAUGKsoKSiSsoMu4iEKMCuCgEe6s8OIak6qymCWeIi"
-
+$routeFromHome=@()
 $WHJSONToCheck = "/home/therabot/wh.json"
 $contentOldFile="/home/therabot/contentOld.json"
+
+#Fetch Thera destinations
+$destinations=(($WHJSON).destinationSolarSystem | Where-Object {$_.name -notmatch "Thera" } | Where-Object {$_.name -notmatch "J"}).name
 
 function getPathFrom {
 param (
@@ -51,13 +51,11 @@ param (
         $closeAmarrSS=[math]::Round(($whjson | where-object {$_.destinationSolarSystem.name -eq $path.closeAmarrSystem} | select destinationSolarSystem).destinationSolarsystem.security,1)
         $closeJitaSS=[math]::Round(($whjson | where-object {$_.destinationSolarSystem.name -eq $path.closeJitaSystem} | select destinationSolarSystem).destinationSolarsystem.security,1)
         $homeToThera="Thera close to Home (I-NGI8) : "+$path.closeTheraHomeSystem+" ("+$path.closeTheraJump+" Jumps)`n"
-        #$i7sToThera="Thera close to I7S-IS : "+$path.closeTheraHomeSystem+" ("+$path.closeTheraI7SJump+" Jumps)`n"
         $theraToJita= "Thera close to Jita : "+$path.closeJitaSystem+" ("+$path.closeJitaJump+" Jumps) Security Status "+$closeJitaSS+"`n"
         $theraToAmarr= "Thera close to Amarr : "+$path.closeAmarrSystem+" ("+$path.closeAmarrJump+" Jumps) Security Status "+$closeAmarrSS+"`n"
         $separator=" ------------------------------------------------------`n"
-        $TotalJumpJita= "Total Jump from Home (I-NGI8) to Jita : "+($path.closeTheraJump+$path.closeJitaJump)+"`n"
-        $TotalJumpAmarr= "Total Jump from Home (I-NGI8) to Amarr : "+($path.closeTheraJump+$path.closeAmarrJump)+"`n"
-        #$TotalJumpI7S= "Total Jump from Home (I-NGI8) to I7S-IS : "+($path.closeTheraJump+$path.closeTheraI7SJump)+"`n"
+        $TotalJumpJita= "Total Jump from Home "+$homesys+" to Jita : "+($path.closeTheraJump+$path.closeJitaJump)+"`n"
+        $TotalJumpAmarr= "Total Jump from Home "+$homesys+" to Amarr : "+($path.closeTheraJump+$path.closeAmarrJump)+"`n"
         $content =  $homeToThera+$theraToJita+$theraToAmarr+$i7sToThera+$separator+$TotalJumpJita+$TotalJumpAmarr+$TotalJumpI7S
         $payload = [PSCustomObject]@{
             content = $content
@@ -65,7 +63,6 @@ param (
         $path | ConvertTo-Json | Out-File $contentOldFile
         $WHJSON | ConvertTo-Json | Out-File $WHJSONToCheck
         Invoke-RestMethod -Uri $hookUrlDiscord -Method Post -Body ($payload | ConvertTo-Json) -ContentType 'Application/Json'
-        Invoke-RestMethod -Uri $hookUrlGuilded -Method Post -Body ($payload | ConvertTo-Json) -ContentType 'Application/Json'
 
 }
 
@@ -74,8 +71,7 @@ function getAllPath {
     $AllPath=New-Object -TypeName psobject
     $PathToAmarr= getPathFrom -source "Amarr" -WHJSON $WHJSON -destinations $destinations
     $PathToJita = getPathFrom -source "Jita" -WHJSON $WHJSON -destinations $destinations
-    $PathToHome = getPathFrom -source ("I-NGI8") -WHJSON $WHJSON -destinations $destinations
-    #$PathToI7S =  getPathFrom -source ("I7S-1S") -WHJSON $WHJSON -destinations $destinations
+    $PathToHome = getPathFrom -source ($homesys) -WHJSON $WHJSON -destinations $destinations
     $AllPath | Add-Member -MemberType NoteProperty -Name closeAmarrSystem -Value ((($PathToAmarr | Sort-Object -Property Jump)[0]).System)
     $AllPath | Add-Member -MemberType NoteProperty -Name closeAmarrJump -Value ((($PathToAmarr | Sort-Object -Property Jump)[0]).Jump)
     $AllPath | Add-Member -MemberType NoteProperty -Name closeJitaSystem -Value ((($PathToJita | Sort-Object -Property Jump)[0]).System)
@@ -83,7 +79,6 @@ function getAllPath {
     $AllPath | Add-Member -MemberType NoteProperty -Name closeTheraHomeSystem -Value ((( $PathToHome | Sort-Object -Property Jump)[0]).System)
     $AllPath | Add-Member -MemberType NoteProperty -Name closeTheraJump -Value ((( $PathToHome | Sort-Object -Property Jump)[0]).Jump)
     $AllPath | Add-Member -MemberType NoteProperty -Name closeTheraI7SSystem -Value ((($PathToI7S | Sort-Object -Property Jump)[0]).System)
-    #$AllPath | Add-Member -MemberType NoteProperty -Name closeTheraI7SJump -Value ((($PathToI7S | Sort-Object -Property Jump)[0]).Jump)
 
 return $AllPath
 }
