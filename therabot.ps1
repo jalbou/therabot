@@ -9,8 +9,8 @@ $routeFromHome=@()
 $hookUrlDiscord = "https://discord.com/api/webhooks/823696475321925673/c_CA7w6C5ghfqyj2MbqnRKZ2SoAWS6tPFN9khoN2MapS-PHPVjKVcFkgax_qNMzecLDM"
 $hookUrlGuilded = "https://media.guilded.gg/webhooks/cded68c3-6cf5-4463-8435-e718c4a2eac1/s1GZ1qImCkKcCosSwOMSe0cICeCwI2W0c82AAygsOCWIMAUGKsoKSiSsoMu4iEKMCuCgEe6s8OIak6qymCWeIi"
 
-$WHJSONToCheck = "/home/jalbou/wh.json"
-$contentOldFile="/home/jalbou/contentOld.json"
+$WHJSONToCheck = "/home/therabot/wh.json"
+$contentOldFile="/home/therabot/contentOld.json"
 #$contentOldFile="oldcontent.json"
 #$WHJSONToCheck = "wh.json"
 
