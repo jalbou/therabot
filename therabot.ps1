@@ -3,7 +3,7 @@ clear
 $wh="https://www.eve-scout.com/api/wormholes"
 $req1 = Invoke-Webrequest -URI $wh -UseBasicParsing
 $WHJSON= $req1 | ConvertFrom-Json
-$homesys="I-NGI8"
+$homesys="Oimmo"
 $hookUrlDiscord = "https://discord.com/api/webhooks/823696475321925673/c_CA7w6C5ghfqyj2MbqnRKZ2SoAWS6tPFN9khoN2MapS-PHPVjKVcFkgax_qNMzecLDM"
 $routeFromHome=@()
 $WHJSONToCheck = "/home/therabot/wh.json"
