@@ -50,7 +50,7 @@ param (
         #Security Status close to Hubs      
         $closeAmarrSS=[math]::Round(($whjson | where-object {$_.destinationSolarSystem.name -eq $path.closeAmarrSystem} | select destinationSolarSystem).destinationSolarsystem.security,1)
         $closeJitaSS=[math]::Round(($whjson | where-object {$_.destinationSolarSystem.name -eq $path.closeJitaSystem} | select destinationSolarSystem).destinationSolarsystem.security,1)
-        $homeToThera="Thera close to Home (I-NGI8) : "+$path.closeTheraHomeSystem+" ("+$path.closeTheraJump+" Jumps)`n"
+        $homeToThera="Thera close to Home "+$homesys+ " : "+$path.closeTheraHomeSystem+" ("+$path.closeTheraJump+" Jumps)`n"
         $theraToJita= "Thera close to Jita : "+$path.closeJitaSystem+" ("+$path.closeJitaJump+" Jumps) Security Status "+$closeJitaSS+"`n"
         $theraToAmarr= "Thera close to Amarr : "+$path.closeAmarrSystem+" ("+$path.closeAmarrJump+" Jumps) Security Status "+$closeAmarrSS+"`n"
         $separator=" ------------------------------------------------------`n"
