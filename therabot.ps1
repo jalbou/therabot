@@ -5,7 +5,6 @@ $wh="https://www.eve-scout.com/api/wormholes"
 $req1 = Invoke-Webrequest -URI $wh -UseBasicParsing
 $WHJSON= $req1 | ConvertFrom-Json
 $homesys=$env:EVE_HOME
-#$hookUrlDiscord = "https://discord.com/api/webhooks/823696475321925673/c_CA7w6C5ghfqyj2MbqnRKZ2SoAWS6tPFN9khoN2MapS-PHPVjKVcFkgax_qNMzecLDM"
 $hookUrlDiscord=$env:DISCORD_URL
 $WHJSONToCheck = "/home/therabot/wh.json"
 $contentOldFile="/home/therabot/contentOld.json"
