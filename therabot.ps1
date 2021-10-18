@@ -1,14 +1,12 @@
-while ($true) {
 clear
+
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $wh="https://www.eve-scout.com/api/wormholes"
 $req1 = Invoke-Webrequest -URI $wh -UseBasicParsing
 $WHJSON= $req1 | ConvertFrom-Json
-#$homesys="Oimmo"
 $homesys=$env:EVE_HOME
 #$hookUrlDiscord = "https://discord.com/api/webhooks/823696475321925673/c_CA7w6C5ghfqyj2MbqnRKZ2SoAWS6tPFN9khoN2MapS-PHPVjKVcFkgax_qNMzecLDM"
 $hookUrlDiscord=$env:DISCORD_URL
-#$routeFromHome=@()
 $WHJSONToCheck = "/home/therabot/wh.json"
 $contentOldFile="/home/therabot/contentOld.json"
 
@@ -89,13 +87,13 @@ return $AllPath
 #Read old EveScout Thera WH JSON
 $oldJSON = ((get-content $WHJSONToCheck -ErrorAction SilentlyContinue) | ConvertFrom-Json)
 $oldContent=((get-content $contentOldFile -ErrorAction SilentlyContinue) | ConvertFrom-Json)
-
+while ($true) {
 #Testing if Thera WH JSON is different of the new one and launch a discovery if so
 if (Test-Path $WHJSONToCheck -PathType leaf)
 {
     if ((Compare-Object -ReferenceObject $WHJSON -DifferenceObject $oldJSON -Property id).count -eq 0) {
         Write-Host "Thera WH Not changed ...."
-        break
+        #return
     }
     else {
 #Get AllPath
@@ -106,7 +104,7 @@ if (Test-Path $WHJSONToCheck -PathType leaf)
         if (@(Compare-Object $oldContent $path -Property closeAmarrSystem,closeAmarrJump,closeJitaSystem,closeJitaJump,closeTheraHomeSystem,closeTheraJump | Where-Object { $_.SideIndicator -eq '=>' }).Count -eq 0) {
             write-host "No destination change skipping Discord..."
             $WHJSON | ConvertTo-Json | Out-File $WHJSONToCheck
-            break
+            #return
         }
         else {
             GenerateTheraReport -WHJSON $WHJSON -path $path
@@ -127,7 +125,7 @@ else {
         if (@(Compare-Object $oldContent $path -Property closeAmarrSystem,closeAmarrJump,closeJitaSystem,closeJitaJump,closeTheraHomeSystem,closeTheraJump | Where-Object { $_.SideIndicator -eq '=>' }).Count -eq 0) {
             write-host "No destination change skipping Discord..."
             $WHJSON | ConvertTo-Json | Out-File $WHJSONToCheck
-            break
+            #break
         }
         else {
             GenerateTheraReport -WHJSON $WHJSON -path $path
@@ -138,5 +136,5 @@ GenerateTheraReport -WHJSON $WHJSON -path $path
 $WHJSON | ConvertTo-Json | Out-File $WHJSONToCheck
 }
 #endregion
-Start-Sleep -s 120
+Start-Sleep -s 60
 }
