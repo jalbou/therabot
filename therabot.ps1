@@ -81,7 +81,7 @@ function getAllPath {
     $AllPath | Add-Member -MemberType NoteProperty -Name closeJitaJump -Value ((($PathToJita | Sort-Object -Property Jump)[0]).Jump)
     $AllPath | Add-Member -MemberType NoteProperty -Name closeTheraHomeSystem -Value ((( $PathToHome | Sort-Object -Property Jump)[0]).System)
     $AllPath | Add-Member -MemberType NoteProperty -Name closeTheraJump -Value ((( $PathToHome | Sort-Object -Property Jump)[0]).Jump)
-    $AllPath | Add-Member -MemberType NoteProperty -Name closeTheraI7SSystem -Value ((($PathToI7S | Sort-Object -Property Jump)[0]).System)
+    #$AllPath | Add-Member -MemberType NoteProperty -Name closeTheraI7SSystem -Value ((($PathToI7S | Sort-Object -Property Jump)[0]).System)
 
 return $AllPath
 }
