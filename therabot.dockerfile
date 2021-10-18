@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-# Install cron & other utilities
+# Install utilities
 RUN apt-get update
 RUN apt-get -y install wget apt-transport-https software-properties-common
 
