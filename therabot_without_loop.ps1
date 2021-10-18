@@ -1,4 +1,3 @@
-while ($true) {
 clear
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $wh="https://www.eve-scout.com/api/wormholes"
@@ -139,5 +138,3 @@ GenerateTheraReport -WHJSON $WHJSON -path $path
 $WHJSON | ConvertTo-Json | Out-File $WHJSONToCheck
 }
 #endregion
-Start-Sleep -s 120
-}
