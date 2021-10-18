@@ -59,7 +59,7 @@ param (
         $separator=" ------------------------------------------------------`n"
         $TotalJumpJita= "Total Jump from Home "+$homesys+" to Jita : "+($path.closeTheraJump+$path.closeJitaJump)+"`n"
         $TotalJumpAmarr= "Total Jump from Home "+$homesys+" to Amarr : "+($path.closeTheraJump+$path.closeAmarrJump)+"`n"
-        $content =  $homeToThera+$theraToJita+$theraToAmarr+$i7sToThera+$separator+$TotalJumpJita+$TotalJumpAmarr+$TotalJumpI7S
+        $content =  $homeToThera+$theraToJita+$theraToAmarr+$separator+$TotalJumpJita+$TotalJumpAmarr
         $payload = [PSCustomObject]@{
             content = $content
         }
@@ -81,7 +81,6 @@ function getAllPath {
     $AllPath | Add-Member -MemberType NoteProperty -Name closeJitaJump -Value ((($PathToJita | Sort-Object -Property Jump)[0]).Jump)
     $AllPath | Add-Member -MemberType NoteProperty -Name closeTheraHomeSystem -Value ((( $PathToHome | Sort-Object -Property Jump)[0]).System)
     $AllPath | Add-Member -MemberType NoteProperty -Name closeTheraJump -Value ((( $PathToHome | Sort-Object -Property Jump)[0]).Jump)
-    #$AllPath | Add-Member -MemberType NoteProperty -Name closeTheraI7SSystem -Value ((($PathToI7S | Sort-Object -Property Jump)[0]).System)
 
 return $AllPath
 }
@@ -104,7 +103,7 @@ if (Test-Path $WHJSONToCheck -PathType leaf)
     $WHJSON | ConvertTo-Json | Out-File $WHJSONToCheck
 #Compare if there is new path
     if (Test-Path $contentOldFile -PathType leaf) {
-        if (@(Compare-Object $oldContent $path -Property closeAmarrSystem,closeAmarrJump,closeJitaSystem,closeJitaJump,closeTheraHomeSystem,closeTheraJump,closeTheraI7SSystem,closeTheraI7SJump | Where-Object { $_.SideIndicator -eq '=>' }).Count -eq 0) {
+        if (@(Compare-Object $oldContent $path -Property closeAmarrSystem,closeAmarrJump,closeJitaSystem,closeJitaJump,closeTheraHomeSystem,closeTheraJump | Where-Object { $_.SideIndicator -eq '=>' }).Count -eq 0) {
             write-host "No destination change skipping Discord..."
             $WHJSON | ConvertTo-Json | Out-File $WHJSONToCheck
             break
@@ -125,7 +124,7 @@ else {
 
 #Compare if there is new path
     if (Test-Path $contentOldFile -PathType leaf) {
-        if (@(Compare-Object $oldContent $path -Property closeAmarrSystem,closeAmarrJump,closeJitaSystem,closeJitaJump,closeTheraHomeSystem,closeTheraJump,closeTheraI7SSystem,closeTheraI7SJump | Where-Object { $_.SideIndicator -eq '=>' }).Count -eq 0) {
+        if (@(Compare-Object $oldContent $path -Property closeAmarrSystem,closeAmarrJump,closeJitaSystem,closeJitaJump,closeTheraHomeSystem,closeTheraJump | Where-Object { $_.SideIndicator -eq '=>' }).Count -eq 0) {
             write-host "No destination change skipping Discord..."
             $WHJSON | ConvertTo-Json | Out-File $WHJSONToCheck
             break
